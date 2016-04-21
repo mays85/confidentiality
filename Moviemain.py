@@ -24,7 +24,10 @@ The result of the program is:
 '''
 
 import argparse
-from AESCipher import *
+import sys
+from Crypto.Hash import SHA256
+from AEScipher import *
+from Payload import *
 
 
 def parse_args():
@@ -48,7 +51,8 @@ def main():
 	# filename (movie file) and a symmetric key, yea?
 	args = parse_args()
 	__input_filename__ = args.file
-	__key__ = args.key
+	if args.key:
+		__key__ = base64.b64decode(args.key)
 	__output_filename__ = args.output
 	__opt_decrypt = args.decrypt
 
@@ -64,6 +68,8 @@ def main():
 		aes = AESCipher(__key__)
 		# use the AESCipher object to decrypt file data
 		raw_data = aes.decrypt(encrypted_data)
+		dataHASH = SHA256.new(raw_data).hexdigest()
+		print dataHASH
 		# open the output file and write the decrypted data to it.
 		f_out = open(__output_filename__, 'w')
 		f_out.write(raw_data)
@@ -74,17 +80,25 @@ def main():
 		f_in = open(__input_filename__, 'r')
 		# read the raw data
 		raw_data = f_in.read()
+		dataHASH = SHA256.new(raw_data).hexdigest()
+		print "Sha-256: %s" % str(dataHASH)  
 		# create a new AESCipher object
-		aes = AESCipher(__key__)
+		aes = AESCipher()
+		print "Block size: %d-bit" % (aes.BLOCK_SIZE*8)
+		print "Key size: %d-bit" % (aes.KEY_SIZE*8)
+		b64KEY = base64.b64encode(aes.key)  
+		print "b64 Key: " + b64KEY + "\n"
 		# use AESCipher object to encrypt raw_data
 		encrypted_data = aes.encrypt(raw_data)
+		print "Encrypted data size: %.2f MB" % (sys.getsizeof(encrypted_data) / 1000000.0)
 		# open the outpt file
 		f_out = open (__output_filename__, 'w')
 		# write encrypted data to the output file
 		f_out.write(encrypted_data)
 		print "File written to: ", __output_filename__
-
+		pay = Payload(b64KEY, dataHASH, encrypted_data )
+		#print pay.key
+		#print pay.fhash
 
 if __name__ == "__main__":
 	main()
-
