@@ -2,8 +2,8 @@
 This project will be our CSCE 600 Data Security Confidentiality project. 
 
 
-To encrypt:
-python Moviemain.py -f [filename] -o [output file name]
+Set up the server
+./Moviemain1.py -f [filename]
 
-To decrypt:
-python Moviemain.py -d -f [filename] -o [output file name] 
+Client process to go get the file
+./Projectormain.py -o [outputfile name] -i [IP address of the server]
