@@ -16,7 +16,6 @@ BLOCK_SIZE = 16
 pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
 unpad = lambda s: s[:-ord(s[len(s)-1:])]
 
-
 # This constructor initializes the AESCipher 
 # object and sets the key value for the object.
 # The key is given as an argument 
@@ -30,8 +29,6 @@ class AESCipher:
 		self.BLOCK_SIZE = BLOCK_SIZE;
 		self.KEY_SIZE = KEY_SIZE
 
-
-
 # The encrypt function takes the raw movie 
 # data and returns the encrypted version
 # using the key value. 
@@ -41,8 +38,9 @@ class AESCipher:
 		cipher = AES.new(self.key, AES.MODE_CBC, iv)
 		return base64.b64encode (iv + cipher.encrypt(raw))
 
-
-#The decrypt function takes the encoded, encrypted data and first decodes it, then decrypts it using the AESCipher.key value.
+# The decrypt function takes the encoded, encrypted data 
+# and first decodes it, then decrypts it 
+# using the AESCipher.key value.
 	def decrypt (self, enc):
 		enc = base64.b64decode(enc)
 		iv = enc[:16]
