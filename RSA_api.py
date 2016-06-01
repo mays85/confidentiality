@@ -1,3 +1,7 @@
+'''
+This is the RSA API. This file provides functionality for the server to ensure authenticated communications with the client.
+'''
+
 from Crypto.PublicKey import RSA
 from Crypto import Random
 from Crypto.Hash import SHA256
